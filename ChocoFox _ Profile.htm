@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChocoFox | Profile</title>
+<meta name="description" content="Личная страница-визитка ChocoFox. Игровые профили и контакты.">
+<meta property="og:title" content="ChocoFox | Profile">
+<meta property="og:description" content="Личная страница-визитка ChocoFox. Игровые профили и контакты.">
+<meta property="og:image" content="https://s6.iimage.su/s/17/th_g40e394xSRM9Wu108D2N8m4nSmYmklBnQmngNXVer.jpg">
+<meta name="theme-color" content="#050508">
+<link rel="icon" href="ChocoFox%20_%20Profile_files/th_g40e394xSRM9Wu108D2N8m4nSmYmklBnQmngNXVer_OMts.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="ChocoFox%20_%20Profile_files/css2_OMts.css" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050508;
+    --panel-bg: rgba(255,255,255,0.035);
+    --panel-border: rgba(255,255,255,0.09);
+    --card-bg: rgba(255,255,255,0.03);
+    --card-bg-hover: rgba(255,255,255,0.055);
+    --border: rgba(255,255,255,0.09);
+    --text:#EDEDF2;
+    --text-muted:#8B8B9A;
+    --font: 'Sora', sans-serif;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{
+    margin:0;
+    min-height:100%;
+    background-color:var(--bg);
+    background-image: radial-gradient(720px 480px at 50% -8%, rgba(88,101,242,0.14), transparent 65%);
+    background-repeat:no-repeat;
+    color:var(--text);
+    font-family:var(--font);
+  }
+
+  body{
+    position:relative;
+    overflow-x:hidden;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+  }
+
+  canvas#stars{
+    position:fixed;
+    inset:0;
+    width:100%;
+    height:100%;
+    z-index:0;
+    display:block;
+  }
+
+  .panel{
+    position:relative;
+    z-index:1;
+    width:100%;
+    max-width:980px;
+    background:var(--panel-bg);
+    border:1px solid var(--panel-border);
+    border-radius:32px;
+    padding:44px 48px 36px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    backdrop-filter:blur(6px);
+    box-shadow:0 30px 60px -30px rgba(0,0,0,0.6);
+  }
+
+  .identity{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:4px;
+    margin-bottom:12px;
+  }
+
+  .avatar-wrap{
+    width:136px;
+    height:136px;
+    border-radius:50%;
+    padding:6px;
+    border:2px solid var(--ring-color,#747F8D);
+    margin-bottom:16px;
+    transition:border-color .3s ease;
+  }
+
+  .avatar{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    object-fit:cover;
+    display:block;
+  }
+
+  .name{
+    font-family:var(--font);
+    font-weight:800;
+    font-size:clamp(28px,5vw,36px);
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+
+  .tagline{
+    margin:0;
+    color:var(--text-muted);
+    font-size:14px;
+    font-family:var(--font);
+    font-weight:500;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+
+  .clock{
+    margin:9px 0 0;
+    font-family:var(--font);
+    font-weight:500;
+    font-size:14.5px;
+    color:var(--text-muted);
+  }
+  .clock-label{ opacity:0.65; }
+
+  /* ---- Общие карточки-ссылки ---- */
+  .card{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:20px 22px;
+    border-radius:22px;
+    background:var(--card-bg);
+    border:1px solid var(--border);
+    text-decoration:none;
+    color:inherit;
+    transition:border-color .25s ease, box-shadow .25s ease, transform .15s ease, background .25s ease;
+  }
+  .card:hover, .card:focus-visible{
+    border-color:var(--accent);
+    background:var(--card-bg-hover);
+    box-shadow:0 0 0 1px var(--accent), 0 0 30px -8px var(--accent);
+    transform:translateY(-1px);
+  }
+  .card:focus-visible{ outline:none; }
+
+  .tile-icon{
+    flex-shrink:0;
+    width:64px;
+    height:64px;
+    object-fit:contain;
+  }
+
+  .card-avatar{
+    width:60px;
+    height:60px;
+    border-radius:16px;
+    object-fit:cover;
+    flex-shrink:0;
+    background:rgba(255,255,255,0.06);
+    box-shadow:0 8px 24px rgba(0,0,0,.28);
+  }
+
+  .card-icon-img{
+    width:72px;
+    height:72px;
+    border-radius:16px;
+    object-fit:cover;
+    flex-shrink:0;
+  }
+
+  .card-body{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:6px;
+    min-width:0;
+  }
+
+  .card-title{
+    font-weight:700;
+    font-size:18px;
+    line-height:1.1;
+  }
+
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    max-width:100%;
+    padding:4px 11px;
+    border-radius:9px;
+    font-size:12.5px;
+    font-weight:600;
+    font-family:var(--font);
+    color:var(--accent);
+    background:color-mix(in srgb, var(--accent) 16%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+
+  .status-dot{
+    position:absolute;
+    right:16px;
+    top:16px;
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:#747F8D;
+  }
+  .status-dot::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:50%;
+    background:inherit;
+    animation:pulse-dot 2s ease-out infinite;
+  }
+  @keyframes pulse-dot{
+    0%{ box-shadow:0 0 0 0 rgba(255,255,255,0.3); }
+    100%{ box-shadow:0 0 0 7px rgba(255,255,255,0); }
+  }
+
+  /* ---- Сетка квадратных плиток ---- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:18px;
+  }
+
+  .tile{
+    aspect-ratio:16 / 9;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    gap:14px;
+    padding:20px 18px;
+    min-width:0;
+  }
+
+  .tile .card-body{
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-width:0;
+    width:100%;
+  }
+
+  .tile .card-title{
+    font-size:17px;
+    line-height:1.2;
+  }
+
+  .tile .chip{
+    max-width:100%;
+  }
+
+  .tile-icon{
+    width:76px;
+    height:76px;
+    flex-shrink:0;
+    object-fit:contain;
+    border-radius:14px;
+    filter:drop-shadow(0 8px 18px rgba(0,0,0,.28));
+  }
+
+  .tile-icon-lg{
+    width:94px;
+    height:94px;
+  }
+
+  @media (max-width:760px){
+    .grid{ grid-template-columns:repeat(2, 1fr); }
+  }
+
+  @media (max-width:520px){
+    .grid{ grid-template-columns:1fr; }
+    .tile{
+      aspect-ratio:16 / 9;
+      padding:18px;
+    }
+    .tile-icon{
+      width:72px;
+      height:72px;
+    }
+    .tile-icon-lg{
+      width:86px;
+      height:86px;
+    }
+  }
+
+  .footer{
+    margin-top:16px;
+    text-align:center;
+    font-size:12.5px;
+    font-weight:500;
+    color:var(--text-muted);
+    line-height:1.6;
+  }
+  .footer a{
+    color:var(--text);
+    text-decoration:none;
+    border-bottom:1px solid var(--border);
+  }
+  .footer a:hover{ border-color:var(--text); }
+
+  /* ---- Анимация загрузки страницы ---- */
+  @keyframes fadeInUp{
+    from{
+      opacity:0;
+      transform:translateY(24px);
+    }
+    to{
+      opacity:1;
+      transform:translateY(0);
+    }
+  }
+
+  @keyframes fadeIn{
+    from{ opacity:0; }
+    to{ opacity:1; }
+  }
+
+  @keyframes scaleIn{
+    from{
+      opacity:0;
+      transform:scale(0.92);
+    }
+    to{
+      opacity:1;
+      transform:scale(1);
+    }
+  }
+
+  @keyframes skyIn{
+    from{ opacity:0; }
+    to{ opacity:1; }
+  }
+
+  /* fill-mode: backwards — после завершения анимации transform свободен для :hover */
+  .panel{
+    animation:fadeInUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+
+  .identity{
+    animation:fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s backwards;
+  }
+
+  .avatar-wrap{
+    animation:scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s backwards;
+  }
+
+  .card{
+    animation:fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+
+  /* Каскадная задержка для карточек */
+  .panel > .card{ animation-delay:0.5s; }
+  .grid .card:nth-child(1){ animation-delay:0.6s; }
+  .grid .card:nth-child(2){ animation-delay:0.65s; }
+  .grid .card:nth-child(3){ animation-delay:0.7s; }
+  .grid .card:nth-child(4){ animation-delay:0.75s; }
+  .grid .card:nth-child(5){ animation-delay:0.8s; }
+  .grid .card:nth-child(6){ animation-delay:0.85s; }
+  .grid .card:nth-child(7){ animation-delay:0.9s; }
+  .grid .card:nth-child(8){ animation-delay:0.95s; }
+  .grid .card:nth-child(9){ animation-delay:1s; }
+
+  .footer{
+    animation:fadeIn 0.6s ease 1.1s backwards;
+  }
+
+  canvas#stars{
+    animation:skyIn 2.4s ease backwards;
+  }
+
+  /* ---- Усиленные hover-эффекты ---- */
+  .card:hover{
+    transform:translateY(-3px) scale(1.01);
+  }
+
+  .tile:hover{
+    transform:translateY(-4px) scale(1.02);
+  }
+
+  .card:hover .tile-icon,
+  .card:hover .card-icon-img,
+  .card:hover .card-avatar{
+    transform:scale(1.08) rotate(2deg);
+    filter:brightness(1.15) drop-shadow(0 12px 30px rgba(0,0,0,.4));
+  }
+
+  .tile-icon,
+  .card-icon-img,
+  .card-avatar{
+    transition:transform .3s cubic-bezier(0.34, 1.56, 0.64, 1), filter .3s ease;
+  }
+
+  .chip{
+    transition:transform .25s cubic-bezier(0.34, 1.56, 0.64, 1), background .25s ease, box-shadow .25s ease;
+  }
+
+  .card:hover .chip{
+    transform:scale(1.05);
+    background:color-mix(in srgb, var(--accent) 24%, transparent);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent);
+  }
+
+  .avatar-wrap{
+    transition:border-color .3s ease, transform .35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .35s ease;
+  }
+
+  .avatar-wrap:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 28px 4px rgba(255,255,255,0.22);
+  }
+
+  .avatar{
+    transition:transform .3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .avatar-wrap:hover .avatar{
+    transform:scale(1.1);
+  }
+
+  .name{
+    transition:color .3s ease, text-shadow .3s ease;
+  }
+
+  .identity:hover .name{
+    color:#FFF;
+    text-shadow:0 0 24px rgba(255,255,255,0.4);
+  }
+
+  .card-title{
+    transition:color .25s ease;
+  }
+
+  .card:hover .card-title{
+    color:#FFF;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .card{ transition:none; }
+    .status-dot::after{ animation:none; }
+    .panel,
+    .identity,
+    .avatar-wrap,
+    .card,
+    .footer,
+    canvas#stars{
+      animation:none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars" aria-hidden="true" width="1566" height="947"></canvas>
+
+<div class="panel">
+
+  <header class="identity">
+    <div class="avatar-wrap" id="avatar-ring">
+      <img class="avatar" src="ChocoFox%20_%20Profile_files/th_g40e394xSRM9Wu108D2N8m4nSmYmklBnQmngNXVer_OMts.jpg" alt="ChocoFox avatar">
+    </div>
+    <h1 class="name">ChocoFox</h1>
+    <p class="tagline">Игровые профили</p>
+    <p class="clock"><span id="clock-time">23:28:33</span><span class="clock-label"> (Moscow Time)</span></p>
+  </header>
+
+  <a class="card" href="https://discord.gg/UuWqkjnWf3" target="_blank" rel="noopener noreferrer" style="--accent:#5865F2">
+    <img class="card-icon-img" src="ChocoFox%20_%20Profile_files/jcVIdvo_OMts.jpeg" alt="">
+    <span class="card-body">
+      <span class="card-title">Discord Channel</span>
+      <span class="chip">Присоединиться</span>
+    </span>
+  </a>
+
+  <div class="grid">
+
+    <a class="card tile" href="https://steamcommunity.com/id/ChocapicFox/" target="_blank" rel="noopener noreferrer" style="--accent:#66C0F4">
+      <img class="tile-icon tile-icon-lg" src="ChocoFox%20_%20Profile_files/QzhPCmQ_OMts.png" alt="">
+      <span class="card-body">
+        <span class="card-title">Steam</span>
+        <span class="chip" id="steam-sub">H2O_LAZ</span>
+      </span>
+    </a>
+
+    <a class="card tile" href="https://tracker.gg/valorant/profile/riot/Flash%20Sentry%23mlp/overview?platform=pc&amp;playlist=competitive&amp;season=4f0864e2-40af-28a4-de2c-0e9e64e75f23" target="_blank" rel="noopener noreferrer" style="--accent:#FF4655">
+      <img class="tile-icon tile-icon-lg" src="ChocoFox%20_%20Profile_files/p0PdGP0_OMts.png" alt="">
+      <span class="card-body">
+        <span class="card-title">VALORANT</span>
+        <span class="chip">Flash Sentry#mlp</span>
+      </span>
+    </a>
+
+    <a class="card tile" href="https://enka.network/zzz/1501061669/" target="_blank" rel="noopener noreferrer" style="--accent:#F5E663">
+      <img class="tile-icon tile-icon-lg" src="ChocoFox%20_%20Profile_files/exbS3lU_OMts.png" alt="">
+      <span class="card-body">
+        <span class="card-title">Zenless Zone Zero</span>
+        <span class="chip" id="zzz-sub">UID 1501061669</span>
+      </span>
+    </a>
+
+    <a class="card tile" href="https://enka.network/hsr/700012749/" target="_blank" rel="noopener noreferrer" style="--accent:#8C7BEA">
+      <img class="tile-icon tile-icon-lg" src="ChocoFox%20_%20Profile_files/01koRtp_OMts.png" alt="">
+      <span class="card-body">
+        <span class="card-title">Honkai: Star Rail</span>
+        <span class="chip" id="hsr-sub">UID 700012749</span>
+      </span>
+    </a>
+
+    <a class="card tile" href="https://enka.network/u/724428194/" target="_blank" rel="noopener noreferrer" style="--accent:#E8B959">
+      <img class="tile-icon tile-icon-lg" src="ChocoFox%20_%20Profile_files/8HWjGXW_OMts.png" alt="">
+      <span class="card-body">
+        <span class="card-title">Genshin Impact</span>
+        <span class="chip" id="genshin-sub">UID 724428194</span>
+      </span>
+    </a>
+
+    <a class="card tile" href="https://osu.ppy.sh/users/21454131" target="_blank" rel="noopener noreferrer" style="--accent:#FF66AA">
+      <img class="tile-icon tile-icon-lg" src="ChocoFox%20_%20Profile_files/0981qCu_OMts.png" alt="">
+      <span class="card-body">
+        <span class="card-title">osu!</span>
+        <span class="chip">Мир #498,546</span>
+      </span>
+    </a>
+
+    <a class="card tile" href="https://followish.io/mywishlist/lrm8lmlceegxhx" target="_blank" rel="noopener noreferrer" style="--accent:#4ADE80">
+      <img class="tile-icon" src="ChocoFox%20_%20Profile_files/unnamed_OMts.webp" alt="">
+      <span class="card-body">
+        <span class="card-title">Wishlist</span>
+        <span class="chip">Список желаемого</span>
+      </span>
+    </a>
+
+    <a class="card tile" href="https://music.yandex.ru/playlists/lk.1ab36c0c-dff6-4a1d-aadc-fd6311ae02fc?utm_source=desktop&amp;utm_medium=copy_link" target="_blank" rel="noopener noreferrer" style="--accent:#FFCC00">
+      <img class="tile-icon" src="ChocoFox%20_%20Profile_files/removed_OMts.png" alt="">
+      <span class="card-body">
+        <span class="card-title">My Playlist</span>
+        <span class="chip">Слушать</span>
+      </span>
+    </a>
+
+    <a class="card tile" href="https://t.me/cliptrash" target="_blank" rel="noopener noreferrer" style="--accent:#26A5E4">
+      <img class="tile-icon" src="ChocoFox%20_%20Profile_files/LGOOkW8_OMts.png" alt="">
+      <span class="card-body">
+        <span class="card-title">Telegram</span>
+        <span class="chip">@cliptrash</span>
+      </span>
+    </a>
+
+  </div>
+
+  <footer class="footer">
+    По всем вопросам писать в Discord:<br>
+    <a href="https://discord.com/users/992421204881309757" target="_blank" rel="noopener noreferrer">ChocoFox</a>
+  </footer>
+
+</div>
+
+<script>
+  // ---------- Звёздное небо: Млечный Путь, плавающие звёзды, созвездия ----------
+  (function(){
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    const panelEl = document.querySelector('.panel');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const TAU = Math.PI * 2;
+    const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+    const rand = (a, b) => a + Math.random() * (b - a);
+    const gauss = () => (Math.random() + Math.random() + Math.random() + Math.random() - 2) / 0.577;
+
+    let w = 0, h = 0, dpr = 1;
+    let stars = [], cons = [], shooters = [];
+    let milky = null, milkySize = 0;
+    let nextCon = 0, nextShooter = 0, lastT = 0;
+    const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+
+    // Цвета звёзд и заранее отрисованные «светящиеся» спрайты
+    const TINTS = [[255,255,255],[255,255,255],[200,220,255],[170,200,255],[255,236,205],[255,206,226]];
+    const sprites = TINTS.map(([r, g, b]) => {
+      const s = 64, c = document.createElement('canvas');
+      c.width = c.height = s;
+      const g2 = c.getContext('2d');
+      const gr = g2.createRadialGradient(32, 32, 0, 32, 32, 32);
+      gr.addColorStop(0,    'rgba(255,255,255,1)');
+      gr.addColorStop(0.12, `rgba(${r},${g},${b},0.95)`);
+      gr.addColorStop(0.35, `rgba(${r},${g},${b},0.22)`);
+      gr.addColorStop(1,    `rgba(${r},${g},${b},0)`);
+      g2.fillStyle = gr;
+      g2.fillRect(0, 0, s, s);
+      return c;
+    });
+
+    // Шаблоны созвездий: точки в долях 0..1 и рёбра. sw/sh — пропорции области.
+    const PATTERNS = [
+      { name: 'Большая Медведица', sw: 1, sh: 0.55,
+        pts: [[0,0.2],[0.2,0.32],[0.38,0.42],[0.55,0.5],[0.6,0.85],[0.9,0.92],[0.95,0.55]],
+        edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,3]] },
+      { name: 'Кассиопея', sw: 1, sh: 0.42,
+        pts: [[0,0.15],[0.22,0.85],[0.5,0.4],[0.78,0.9],[1,0.1]],
+        edges: [[0,1],[1,2],[2,3],[3,4]] },
+      { name: 'Орион', sw: 0.62, sh: 1,
+        pts: [[0.15,0.05],[0.85,0],[0.38,0.5],[0.5,0.48],[0.62,0.46],[0.2,1],[0.8,0.95],[0.5,-0.0]],
+        edges: [[0,1],[0,2],[1,4],[2,3],[3,4],[2,5],[4,6]] },
+      { name: 'Лебедь', sw: 0.85, sh: 1,
+        pts: [[0.5,0],[0.5,0.38],[0.5,0.7],[0.5,1],[0.05,0.4],[0.95,0.3]],
+        edges: [[0,1],[1,2],[2,3],[4,1],[1,5]] },
+      { name: 'Лира', sw: 0.5, sh: 0.9,
+        pts: [[0.5,0],[0.15,0.45],[0.75,0.5],[0.25,1],[0.85,0.95]],
+        edges: [[0,1],[0,2],[1,2],[1,3],[2,4],[3,4]] },
+      { name: 'Скорпион', sw: 1, sh: 0.8,
+        pts: [[0,0.1],[0.12,0.3],[0.26,0.38],[0.4,0.5],[0.55,0.62],[0.7,0.78],[0.88,0.85],[1,0.65]],
+        edges: [[0,1],[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]] }
+    ];
+    let patternBag = [];
+
+    function resize(){
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = window.innerWidth;
+      h = window.innerHeight;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    // ---- Млечный Путь: рисуется один раз в отдельный холст ----
+    function blob(c, x, y, rx, ry, rgb, a, comp){
+      c.save();
+      c.globalCompositeOperation = comp || 'source-over';
+      c.translate(x, y);
+      c.scale(rx, ry);
+      const gr = c.createRadialGradient(0, 0, 0, 0, 0, 1);
+      gr.addColorStop(0, `rgba(${rgb},${a})`);
+      gr.addColorStop(1, `rgba(${rgb},0)`);
+      c.fillStyle = gr;
+      c.fillRect(-1, -1, 2, 2);
+      c.restore();
+    }
+
+    function buildMilkyWay(){
+      const D = Math.ceil(Math.hypot(w, h) * 1.05);
+      milkySize = D;
+      milky = document.createElement('canvas');
+      milky.width = milky.height = D;
+      const c = milky.getContext('2d');
+      const cy = D / 2;
+      const band = Math.max(70, Math.min(w, h) * 0.14);
+      const wave = x => Math.sin((x / D) * TAU * 1.3 + 1) * band * 0.5;
+
+      const cool = ['110,95,220', '70,120,240', '140,110,235', '220,120,190'];
+      const warm = '255,215,170';
+
+      // мягкое свечение полосы
+      for (let i = 0; i < 100; i++){
+        const x = Math.random() * D;
+        const y = cy + wave(x) + gauss() * band * 0.45;
+        const nearCore = 1 - Math.abs(x - D / 2) / (D / 2);
+        const rgb = Math.random() < nearCore * 0.55 ? warm : cool[(Math.random() * cool.length) | 0];
+        blob(c, x, y, band * rand(1.2, 3), band * rand(0.5, 1.1), rgb, rand(0.04, 0.1));
+      }
+      // яркое ядро
+      for (let i = 0; i < 14; i++){
+        const x = D / 2 + gauss() * band * 1.6;
+        blob(c, x, cy + wave(x) + gauss() * band * 0.2, band * rand(1.5, 2.8), band * rand(0.4, 0.8), warm, rand(0.05, 0.09));
+      }
+      // тёмные пылевые полосы
+      for (let i = 0; i < 34; i++){
+        const x = Math.random() * D;
+        blob(c, x, cy + wave(x) + gauss() * band * 0.28, band * rand(1, 2.6), band * rand(0.1, 0.26), '0,0,0', rand(0.25, 0.5), 'destination-out');
+      }
+      // россыпь мелких звёзд
+      const dots = Math.min(9000, Math.floor(D * 3.2));
+      for (let i = 0; i < dots; i++){
+        const x = Math.random() * D;
+        const y = cy + wave(x) + gauss() * band * 0.55;
+        const t = TINTS[(Math.random() * TINTS.length) | 0];
+        const s = Math.random() < 0.04 ? 1.6 : rand(0.4, 1.1);
+        c.fillStyle = `rgba(${t[0]},${t[1]},${t[2]},${rand(0.15, 0.7)})`;
+        c.fillRect(x, y, s, s);
+      }
+    }
+
+    // ---- Звёзды ----
+    function makeStar(){
+      const z = Math.pow(Math.random(), 1.5) * 0.8 + 0.2;
+      const big = Math.random() < 0.06;
+      const ang = Math.random() * TAU;
+      const sp = rand(2, 9) * z;
+      return {
+        x: Math.random() * w, y: Math.random() * h, z,
+        r: (big ? rand(1.3, 2.2) : rand(0.3, 1.1)) * (0.6 + z * 0.6),
+        vx: Math.cos(ang) * sp + 1.5 * z,
+        vy: Math.sin(ang) * sp,
+        base: rand(0.35, 0.95),
+        ts: rand(0.0006, 0.002), tp: Math.random() * TAU,
+        fa: rand(2, 6) * z, fs: rand(0.0001, 0.0004), fp: Math.random() * TAU,
+        tint: (Math.random() * sprites.length) | 0,
+        con: null, tx: 0, ty: 0, boost: 0, dx: 0, dy: 0
+      };
+    }
+
+    function makeStars(){
+      const count = clamp(Math.floor((w * h) / 4500), 120, 420);
+      stars = Array.from({ length: count }, makeStar);
+    }
+
+    // ---- Созвездия ----
+    function spawnConstellation(){
+      if (!patternBag.length) patternBag = PATTERNS.slice().sort(() => Math.random() - 0.5);
+      const inUse = new Set(cons.map(c => c.pat));
+      let idx = patternBag.findIndex(p => !inUse.has(p));
+      if (idx < 0) idx = 0;
+      const pat = patternBag.splice(idx, 1)[0];
+
+      const size = clamp(Math.min(w, h) * 0.34, 150, 330);
+      const bw = size * pat.sw, bh = size * pat.sh;
+      const R = Math.hypot(bw, bh) / 2 + 20;
+      const pr = panelEl.getBoundingClientRect();
+
+      let cx = w / 2, cy = h / 2, best = Infinity;
+      for (let i = 0; i < 20; i++){
+        const x = rand(R, Math.max(R + 1, w - R));
+        const y = rand(R, Math.max(R + 1, h - R));
+        const ox = Math.max(0, Math.min(x + R, pr.right) - Math.max(x - R, pr.left));
+        const oy = Math.max(0, Math.min(y + R, pr.bottom) - Math.max(y - R, pr.top));
+        const overlap = ox * oy;
+        if (overlap < best){ best = overlap; cx = x; cy = y; }
+        if (overlap === 0) break;
+      }
+
+      const rot = rand(-0.5, 0.5), flip = Math.random() < 0.5 ? -1 : 1;
+      const cos = Math.cos(rot), sin = Math.sin(rot);
+      const targets = pat.pts.map(([px, py]) => {
+        const lx = (px - 0.5) * bw * flip, ly = (py - 0.5) * bh;
+        return [cx + lx * cos - ly * sin, cy + lx * sin + ly * cos];
+      });
+
+      const con = { pat, edges: pat.edges, members: [], state: 'form', line: 0, hold: 0, fade: 1 };
+      const free = stars.filter(s => !s.con && s.z > 0.45);
+      for (const [tx, ty] of targets){
+        let bi = -1, bd = Infinity;
+        for (let i = 0; i < free.length; i++){
+          const d = (free[i].x - tx) ** 2 + (free[i].y - ty) ** 2;
+          if (d < bd){ bd = d; bi = i; }
+        }
+        if (bi < 0) return;
+        const s = free.splice(bi, 1)[0];
+        s.con = con; s.tx = tx; s.ty = ty;
+        con.members.push(s);
+      }
+      cons.push(con);
+    }
+
+    function updateConstellations(dt){
+      for (let i = cons.length - 1; i >= 0; i--){
+        const con = cons[i];
+        if (con.state === 'form'){
+          let arrived = 0;
+          for (const s of con.members){
+            const dx = s.tx - s.x, dy = s.ty - s.y, d = Math.hypot(dx, dy);
+            if (d < 1.5){ s.x = s.tx; s.y = s.ty; arrived++; continue; }
+            const step = Math.min(d * (1 - Math.exp(-dt * 1.6)), 200 * dt);
+            s.x += dx / d * step;
+            s.y += dy / d * step;
+            if (d < 14) arrived++;
+          }
+          if (arrived >= con.members.length * 0.85 || con.age > 12) con.line += dt / 2.6;
+          con.age = (con.age || 0) + dt;
+          if (con.line >= 1){ con.line = 1; con.state = 'hold'; }
+        } else if (con.state === 'hold'){
+          con.hold += dt;
+          if (con.hold > 8){
+            con.state = 'fade';
+            for (const s of con.members) s.con = null;
+          }
+        } else {
+          con.fade -= dt / 2.5;
+          if (con.fade <= 0){ cons.splice(i, 1); }
+        }
+      }
+    }
+
+    function drawConstellations(){
+      ctx.lineCap = 'round';
+      for (const con of cons){
+        const m = con.members;
+        const E = con.edges.length;
+        for (let i = 0; i < E; i++){
+          const e = clamp(con.line * E - i, 0, 1);
+          if (e <= 0) continue;
+          const a = m[con.edges[i][0]], b = m[con.edges[i][1]];
+          const x1 = a.dx, y1 = a.dy;
+          const x2 = x1 + (b.dx - x1) * e, y2 = y1 + (b.dy - y1) * e;
+          const gr = ctx.createLinearGradient(x1, y1, x2, y2);
+          const al = 0.42 * Math.max(con.fade, 0);
+          gr.addColorStop(0, `rgba(170,200,255,${al})`);
+          gr.addColorStop(1, `rgba(200,180,255,${al})`);
+          ctx.strokeStyle = gr;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // ---- Падающие звёзды ----
+    function spawnShooter(){
+      const ang = rand(0.35, 0.65);
+      shooters.push({
+        x: rand(w * 0.25, w * 1.05), y: rand(-20, h * 0.35),
+        vx: -Math.cos(ang) * rand(700, 1000), vy: Math.sin(ang) * rand(700, 1000),
+        life: 0, max: rand(0.7, 1.1), len: rand(110, 190)
+      });
+    }
+
+    function drawShooters(dt){
+      for (let i = shooters.length - 1; i >= 0; i--){
+        const s = shooters[i];
+        s.life += dt;
+        s.x += s.vx * dt; s.y += s.vy * dt;
+        const k = s.life / s.max;
+        if (k >= 1){ shooters.splice(i, 1); continue; }
+        const a = Math.sin(k * Math.PI);
+        const sp = Math.hypot(s.vx, s.vy);
+        const tx = s.x - s.vx / sp * s.len, ty = s.y - s.vy / sp * s.len;
+        const gr = ctx.createLinearGradient(s.x, s.y, tx, ty);
+        gr.addColorStop(0, `rgba(255,255,255,${a})`);
+        gr.addColorStop(1, 'rgba(160,190,255,0)');
+        ctx.strokeStyle = gr;
+        ctx.lineWidth = 1.6;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(tx, ty);
+        ctx.stroke();
+      }
+    }
+
+    // ---- Главный цикл ----
+    function frame(now){
+      const t = now || 0;
+      const dt = Math.min((t - lastT) / 1000 || 0.016, 0.05);
+      lastT = t;
+
+      mouse.x += (mouse.tx - mouse.x) * Math.min(1, dt * 2);
+      mouse.y += (mouse.ty - mouse.y) * Math.min(1, dt * 2);
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Млечный Путь: медленный дрейф, лёгкий параллакс, «дыхание»
+      if (milky){
+        ctx.save();
+        ctx.globalAlpha = 0.88 + 0.12 * Math.sin(t * 0.0003);
+        ctx.translate(w / 2 - mouse.x * 12, h / 2 - mouse.y * 12);
+        ctx.rotate(-0.42 + Math.sin(t * 0.00005) * 0.035);
+        ctx.drawImage(milky, -milkySize / 2, -milkySize / 2);
+        ctx.restore();
+      }
+
+      if (!reduceMotion){
+        if (t > nextCon && cons.length < (w > 1100 ? 2 : 1)){
+          spawnConstellation();
+          nextCon = t + rand(7000, 11000);
+        }
+        if (t > nextShooter){
+          spawnShooter();
+          nextShooter = t + rand(5000, 11000);
+        }
+        updateConstellations(dt);
+      }
+
+      for (const s of stars){
+        if (!reduceMotion && !s.con){
+          s.x += s.vx * dt;
+          s.y += s.vy * dt;
+          if (s.x < -10) s.x = w + 10; else if (s.x > w + 10) s.x = -10;
+          if (s.y < -10) s.y = h + 10; else if (s.y > h + 10) s.y = -10;
+        }
+        const floatK = s.con ? 0.3 : 1;
+        s.dx = s.x + Math.sin(t * s.fs + s.fp) * s.fa * floatK - mouse.x * s.z * 22;
+        s.dy = s.y + Math.cos(t * s.fs * 1.3 + s.fp) * s.fa * floatK - mouse.y * s.z * 22;
+        s.boost += ((s.con ? 1 : 0) - s.boost) * Math.min(1, dt * 2);
+      }
+
+      for (const s of stars){
+        const tw = reduceMotion ? 1 : 0.6 + 0.4 * Math.sin(t * s.ts + s.tp);
+        const alpha = clamp(s.base * tw + s.boost * 0.35, 0, 1);
+        const r = s.r * (1 + s.boost * 0.6);
+        const d = r * 12;
+        ctx.globalAlpha = alpha;
+        ctx.drawImage(sprites[s.tint], s.dx - d / 2, s.dy - d / 2, d, d);
+
+        if (r > 1.35 || s.boost > 0.4){
+          const len = r * 5 * (0.6 + 0.4 * tw);
+          ctx.globalAlpha = alpha * 0.45;
+          ctx.strokeStyle = '#fff';
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(s.dx - len, s.dy); ctx.lineTo(s.dx + len, s.dy);
+          ctx.moveTo(s.dx, s.dy - len); ctx.lineTo(s.dx, s.dy + len);
+          ctx.stroke();
+        }
+      }
+      ctx.globalAlpha = 1;
+
+      if (!reduceMotion){
+        drawConstellations();
+        drawShooters(dt);
+        requestAnimationFrame(frame);
+      }
+    }
+
+    function rebuild(){
+      resize();
+      buildMilkyWay();
+      makeStars();
+      cons = []; shooters = [];
+    }
+
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        rebuild();
+        if (reduceMotion) frame(0);
+      }, 150);
+    });
+    window.addEventListener('pointermove', e => {
+      mouse.tx = e.clientX / w - 0.5;
+      mouse.ty = e.clientY / h - 0.5;
+    }, { passive: true });
+
+    rebuild();
+    nextCon = 2800;
+    nextShooter = 4500;
+    if (reduceMotion) frame(0); else requestAnimationFrame(frame);
+  })();
+
+  // ---------- Часы (Москва) ----------
+  function updateClock(){
+    const fmt = new Intl.DateTimeFormat('ru-RU', {
+      timeZone: 'Europe/Moscow',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+    });
+    document.getElementById('clock-time').textContent = fmt.format(new Date());
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // ---------- Steam ----------
+  // steamcommunity.com не отдаёт CORS-заголовки напрямую, поэтому запрос идёт
+  // через публичный CORS-прокси. Это best-effort: если прокси недоступен,
+  // остаётся статичный текст. Для полностью надёжного live-обновления
+  // понадобится небольшой собственный сервер-прокси (Cloudflare Worker и т.п.).
+  async function updateSteam(){
+    try {
+      const target = encodeURIComponent('https://steamcommunity.com/id/ChocapicFox/?xml=1');
+      const res = await fetch(`https://corsproxy.io/?url=${target}`);
+      const text = await res.text();
+      const xml = new DOMParser().parseFromString(text, 'text/xml');
+      const name = xml.querySelector('steamID')?.textContent;
+      if (name) document.getElementById('steam-sub').textContent = name;
+    } catch (e) {
+      // прокси недоступен — оставляем статичный ник
+    }
+  }
+  updateSteam();
+  setInterval(updateSteam, 120000);
+
+  // ---------- Enka.Network (Genshin / HSR / ZZZ) ----------
+  async function updateGenshin(){
+    try {
+      const res = await fetch('https://enka.network/api/uid/724428194');
+      const data = await res.json();
+      const info = data.playerInfo;
+      document.getElementById('genshin-sub').textContent = `AR ${info.level} • ${info.nickname}`;
+    } catch (e) { /* оставляем UID */ }
+  }
+
+  async function updateHSR(){
+    try {
+      const res = await fetch('https://enka.network/api/hsr/uid/700012749');
+      const data = await res.json();
+      const info = data.detailInfo;
+      document.getElementById('hsr-sub').textContent = `TL ${info.level} • ${info.nickname}`;
+    } catch (e) { /* оставляем UID */ }
+  }
+
+  async function updateZZZ(){
+    try {
+      const res = await fetch('https://enka.network/api/zzz/uid/1501061669');
+      const data = await res.json();
+      const info = data.PlayerInfo?.SocialDetail?.ProfileDetail || data.PlayerInfo || {};
+      const nickname = info.Nickname || info.nickname;
+      const level = info.Level || info.level;
+      if (level) {
+        document.getElementById('zzz-sub').textContent = nickname ? `IL ${level} • ${nickname}` : `IL ${level}`;
+      }
+    } catch (e) { /* оставляем UID */ }
+  }
+
+  updateGenshin();
+  updateHSR();
+  updateZZZ();
+  setInterval(updateGenshin, 300000);
+  setInterval(updateHSR, 300000);
+  setInterval(updateZZZ, 300000);
+</script>
+
+
+
+</body></html>
